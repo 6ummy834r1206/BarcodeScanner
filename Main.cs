@@ -19,8 +19,8 @@ namespace BarcodeScanner
 {
     public partial class Main : Form
     {
-        private const int myPID = 0xA002;  //產品ID
-        private const int myVID = 0x065A;  //供應商ID
+        private const int myPID =;  //產品ID
+        private const int myVID =;  //供應商ID
         private static UsbDeviceFinder MyUsbFinder;
         private static UsbDevice MyUsbDevice;
         private static IUsbDevice wholeUsbDevice;
@@ -55,7 +55,7 @@ namespace BarcodeScanner
         /* BackgroundWorker */
         private void Local_PLC_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConnectLocalPLC("192.168.1.100", 1026);
+            ConnectLocalPLC("");
             while (true)
             {
                 if (ScanOrNot())
@@ -83,7 +83,7 @@ namespace BarcodeScanner
         }
         private void EPPLC_DoWork(object sender, DoWorkEventArgs e)
         {
-            ConnectEPPLC("192.168.1.110", 1025);
+            ConnectEPPLC("",);
             int countIn = 0;
             int indexIn = 0;
             receiverPLCFinished = true;
@@ -303,7 +303,6 @@ namespace BarcodeScanner
                         int length = socket.EndReceive(asyncResult);
                         DecodeData message = new DecodeData(data);
                         WriteInDataView(message);
-                        //setText(BitConverter.ToString(data).Replace("-", ""));
                     }
                     catch (Exception)
                     {
@@ -322,7 +321,7 @@ namespace BarcodeScanner
         {
             if (client == null) return;
             //encoding
-            byte[] header = { 0x55, 0x00 };
+            byte[] header = {};
             byte[] datetime = GetTime();
             String[] info = new String[4];
             int index = dataGridViewOut.Rows.Count - 1;
@@ -364,15 +363,15 @@ namespace BarcodeScanner
         {
             if (client == null) return;
             //encoding
-            byte[] header = { 0x55, 0x00 };
+            byte[] header = { };
             byte[] datetime = GetTime();
-            byte[] Position = GetPosition("0001");
-            byte[] LogNo = GetLogNo("0002");
+            byte[] Position = GetPosition("");
+            byte[] LogNo = GetLogNo("");
             byte[] SendPCN = new byte[128];
             byte[] PCNByte = Encoding.ASCII.GetBytes(PCN);
             Array.Copy(PCNByte, 0, SendPCN, 0, PCNByte.Length);
             Array.Reverse(SendPCN);
-            byte[] SNByte = Encoding.ASCII.GetBytes("0123456789");
+            byte[] SNByte = Encoding.ASCII.GetBytes("");
             Array.Reverse(SNByte);
             byte[] data = new byte[4096];
             Array.Copy(header, 0, data, 0, header.Length);
@@ -591,7 +590,7 @@ namespace BarcodeScanner
             CreateFolder();
             try
             {
-                string filePath = @"C:\BCS&MSS\" + PCN;
+                string filePath = @"" + PCN;
                 if (!File.Exists(filePath + ".xlsx"))
                 {
                     Excel.Workbook wBook;
@@ -658,7 +657,7 @@ namespace BarcodeScanner
         {
             try
             {
-                string filePath = @"C:\BCS&MSS";
+                string filePath = @"";
                 bool exists = System.IO.Directory.Exists(filePath);
                 if (!exists)
                     Directory.CreateDirectory(filePath);
@@ -672,7 +671,7 @@ namespace BarcodeScanner
         {
             try
             {
-                string filePath = @"C:\BCS&MSS\" + PCN;
+                string filePath = @"" + PCN;
                 if (File.Exists(filePath + ".xlsx"))
                 {
                     Excel.Workbook wBook;
@@ -741,7 +740,7 @@ namespace BarcodeScanner
         {
             try
             {
-                string filePath = @"C:\BCS&MSS\" + PCN;
+                string filePath = @"" + PCN;
                 if (File.Exists(filePath + ".xlsx"))
                 {
                     Excel.Workbook wBook;
@@ -804,7 +803,7 @@ namespace BarcodeScanner
         }
         private bool ScanOrNot()
         {
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00, 0x00, 0xF2, 0x03, 0x00, 0xA8, 0x01, 0x00 };
+            byte[] myBytes = { };
             localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = localTcp.ReceiveBufferSize;
             Console.WriteLine("bufferSize: " + bufferSize);
@@ -814,13 +813,7 @@ namespace BarcodeScanner
         }
         private void ScanSuccess()
         {
-            byte[] myBytes = { 0x50, 0x00,
-            0x00,
-            0xFF,
-            0xFF, 0x03,
-            0x00,
-            0x0E, 0x00,
-            0x00, 0x00, 0x01, 0x14, 0x00, 0x00, 0xF2, 0x03, 0x00, 0xA8, 0x01, 0x00, 0x00, 0x00 };
+            byte[] myBytes = {};
             localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = localTcp.ReceiveBufferSize;
             byte[] myBufferBytes = new byte[bufferSize];
@@ -828,7 +821,7 @@ namespace BarcodeScanner
         }
         private string GetPosition()
         {
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00, 0x00, 0xE8, 0x03, 0x00, 0xA8, 0x01, 0x00 };
+            byte[] myBytes = {  };
             localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = localTcp.ReceiveBufferSize;
             byte[] myBufferBytes = new byte[bufferSize];
@@ -837,7 +830,7 @@ namespace BarcodeScanner
         }
         private string AAnumber()
         {
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00, 0x00, 0xEA, 0x03, 0x00, 0xA8, 0x01, 0x00 };
+            byte[] myBytes = {  };
             localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = localTcp.ReceiveBufferSize;
             byte[] myBufferBytes = new byte[bufferSize];
@@ -846,7 +839,7 @@ namespace BarcodeScanner
         }
         private bool SendOrNot()
         {
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00, 0x00, 0xFC, 0x03, 0x00, 0xA8, 0x01, 0x00 };
+            byte[] myBytes = { };
             localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = localTcp.ReceiveBufferSize;
             Console.WriteLine("bufferSize: " + bufferSize);
@@ -856,13 +849,7 @@ namespace BarcodeScanner
         }
         private void SendSuccess()
         {
-            byte[] myBytes = { 0x50, 0x00,
-            0x00,
-            0xFF,
-            0xFF, 0x03,
-            0x00,
-            0x0E, 0x00,
-            0x00, 0x00, 0x01, 0x14, 0x00, 0x00, 0xFC, 0x03, 0x00, 0xA8, 0x01, 0x00, 0x00, 0x00 };
+            byte[] myBytes = {};
             localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = localTcp.ReceiveBufferSize;
             byte[] myBufferBytes = new byte[bufferSize];
@@ -870,13 +857,7 @@ namespace BarcodeScanner
         }
         private void WriteAA(byte result, byte position)
         {
-            byte[] myBytes = { 0x50, 0x00,
-            0x00,
-            0xFF,
-            0xFF, 0x03,
-            0x00,
-            0x0E, 0x00,
-            0x00, 0x00, 0x01, 0x14, 0x00, 0x00, position, 0x03, 0x00, 0xA8, 0x01, 0x00, result , 0x00};
+            byte[] myBytes = {};
             EPTcp.GetStream().Write(myBytes, 0, myBytes.Length);
             int bufferSize = EPTcp.ReceiveBufferSize;
             Console.WriteLine("bufferSize: " + bufferSize);
@@ -911,7 +892,7 @@ namespace BarcodeScanner
                         }
                         Local_PLC.RunWorkerAsync();
                         EPPLC.RunWorkerAsync();
-//Loadbutton.Enabled = false;
+
                         StartButton.Enabled = false;
                         buttonChangeIP.Enabled = false;
                         StopButton.Enabled = true;
@@ -934,12 +915,7 @@ namespace BarcodeScanner
         private void StopButton_Click(object sender, EventArgs e)
         {
             workFinished = false;
-            //while(writerFinished || receiverPLCFinished)
-            //{
-            //    Thread.Sleep(200);
-            //}
             CleanDataView();
-//Loadbutton.Enabled = true;
             StartButton.Enabled = true;
             buttonChangeIP.Enabled = true;
             textBox_RMR1.Text = "";
@@ -957,8 +933,6 @@ namespace BarcodeScanner
         }
         private void buttonTest_Click(object sender, EventArgs e)
         {
-//Form f = new test();
-            //f.Visible = true;
         }
         private void buttonRMR1_Click(object sender, EventArgs e)
         {
@@ -982,115 +956,6 @@ namespace BarcodeScanner
 
 
         /* PLC Function*/
-        private void buttonWrtieD_Click_1(object sender, EventArgs e)
-        {
-            String a = "00";
-            String b = "00";
-            this.Invoke(new MethodInvoker(delegate
-            {
-                //button1.PerformClick();
-                //a = textBox1.Text.Substring(0, 2);
-                //b = textBox1.Text.Substring(2, 2);
-            }));
-            byte c = Convert.ToByte(a, 16);
-            byte d = Convert.ToByte(b, 16);
-            byte[] myBytes = { 0x50, 0x00,
-            0x00,
-            0xFF,
-            0xFF, 0x03,
-            0x00,
-            0x0E, 0x00,
-            0x00, 0x00, 0x01, 0x14, 0x00, 0x00, 0xDE, 0x00, 0x00, 0xA8, 0x01, 0x00, c, d };
-            localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
-            int bufferSize = localTcp.ReceiveBufferSize;
-            Console.WriteLine("bufferSize: " + bufferSize);
-            byte[] myBufferBytes = new byte[bufferSize];
-            localTcp.GetStream().Read(myBufferBytes, 0, bufferSize);
-            //encoding
-            int s = BitConverter.ToInt32(myBufferBytes, 9);
-            if (s == 0)
-            {
-                MessageBox.Show("寫入成功");
-            }
-            else
-            {
-                MessageBox.Show("寫入失敗");
-            }
-
-        }
-        private void buttonReadD_Click_1(object sender, EventArgs e)
-        {
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00, 0x00, 0xDE, 0x00, 0x00, 0xA8, 0x01, 0x00 };
-
-            localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
-            int bufferSize = localTcp.ReceiveBufferSize;
-            Console.WriteLine("bufferSize: " + bufferSize);
-            byte[] myBufferBytes = new byte[bufferSize];
-            localTcp.GetStream().Read(myBufferBytes, 0, bufferSize);
-            MessageBox.Show(BitConverter.ToInt32(myBufferBytes, 11).ToString());
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    WriteIn(i.ToString(), BitConverter.ToInt32(myBufferBytes, i).ToString());
-            //}
-        }
-        private void buttonConnect_Click_1(object sender, EventArgs e)
-        {
-            string hostName = "192.168.1.100";
-            int connectPort = 1026;
-            localTcp = new TcpClient();
-            try
-            {
-                localTcp.Connect(hostName, connectPort);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("主機 {0} 通訊埠 {1} 無法連接  !!", hostName, connectPort);
-                MessageBox.Show(ex.Message);
-            }
-        }
-        private void buttonOnM_Click(object sender, EventArgs e)
-        {   
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0E, 0x00, 0x00, 0x00, 0x01, 0x14, 0x01, 0x00, 0x64, 0x00, 0x00, 0x90, 0x04, 0x00, 0x11, 0x11 };
-            localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
-            int bufferSize = localTcp.ReceiveBufferSize;
-            Console.WriteLine("bufferSize: " + bufferSize);
-            byte[] myBufferBytes = new byte[bufferSize];
-            localTcp.GetStream().Read(myBufferBytes, 0, bufferSize);
-        }
-        private void buttonOffM_Click_1(object sender, EventArgs e)
-        {
-            byte[] myBytes = { 0x50, 0x00,
-            0x00,
-            0xFF,
-            0xFF, 0x03,
-            0x00,
-            0x0E, 0x00,
-            0x00, 0x00, 0x01, 0x14, 0x01, 0x00, 0x64, 0x00, 0x00, 0x90, 0x04, 0x00, 0x00, 0x00};
-            localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
-            int bufferSize = localTcp.ReceiveBufferSize;
-            Console.WriteLine("bufferSize: " + bufferSize);
-            byte[] myBufferBytes = new byte[bufferSize];
-            localTcp.GetStream().Read(myBufferBytes, 0, bufferSize);
-        }
-        private void buttonLookM_Click(object sender, EventArgs e)
-        {
-            byte[] myBytes = { 0x50, 0x00, 0x00, 0xFF, 0xFF, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x01, 0x04, 0x00, 0x00, 0x64, 0x00, 0x00, 0x90, 0x04, 0x00 };
-            localTcp.GetStream().Write(myBytes, 0, myBytes.Length);
-            int bufferSize = localTcp.ReceiveBufferSize;
-            Console.WriteLine("bufferSize: " + bufferSize);
-            byte[] myBufferBytes = new byte[bufferSize];
-            localTcp.GetStream().Read(myBufferBytes, 0, bufferSize);
-            //label15.Text = BitConverter.ToInt32(myBufferBytes, 11) == 0 ? "0" : "1";
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    WriteIn(i.ToString(), BitConverter.ToInt32(myBufferBytes, i).ToString());
-            //}
-        }
-
-        private void textBox_RMR1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
 
 
