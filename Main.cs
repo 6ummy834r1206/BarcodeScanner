@@ -110,31 +110,31 @@ namespace BarcodeScanner
                             position = dataGridViewIn.Rows[i].Cells[1].Value.ToString();
                             result = dataGridViewIn.Rows[i].Cells[5].Value.ToString();
                         }));
-                        byte resultByte = 0x00;
+                        byte resultByte = ;
                         if (result.Equals("OK"))
                         {
-                            resultByte = 0x01;
+                            resultByte = ;
                         }
                         else if (result.Equals("NG"))
                         {
-                            resultByte = 0x02;
+                            resultByte = ;
                         }
                         switch (position)
                         {
                             case "1":
-                                WriteAA(resultByte, 0xF3);
+                                WriteAA(resultByte, );
                                 break;
                             case "2":
-                                WriteAA(resultByte, 0xF4);
+                                WriteAA(resultByte, );
                                 break;
                             case "3":
-                                WriteAA(resultByte, 0xF5);
+                                WriteAA(resultByte, );
                                 break;
                             case "4":
-                                WriteAA(resultByte, 0xF6);
+                                WriteAA(resultByte, );
                                 break;
                             case "5":
-                                WriteAA(resultByte, 0xF7);
+                                WriteAA(resultByte, );
                                 break;
                             default:
                                 MessageBox.Show("抓不到判斷AA機是哪台");
@@ -472,9 +472,9 @@ namespace BarcodeScanner
             UsbEndpointReader reader = MyUsbDevice.OpenEndpointReader(ReadEndpointID.Ep02);
             //Create a buffer with some data in it
             byte[] buffer = new byte[3];
-            buffer[0] = 0x1B;
-            buffer[1] = 0x5A;
-            buffer[2] = 0x0D;
+            buffer[0] = ;
+            buffer[1] = ;
+            buffer[2] = ;
             //Write three bytes
             ErrorCode ec = ErrorCode.None;
             int bytesWritten;
