@@ -9,3 +9,11 @@
 右邊欄位則是接收來自不同AA機的訊息
 
 Receiver則是送給出料機告知哪台AA機做完
+
+There are a total of 5 AA machines, 1 input machine, and 1 output machine.
+
+The input machine (Local) will monitor which AA machine has finished its task and send it to that AA machine, recording it in the left column.
+
+The right column will display messages received from different AA machines.
+
+The receiver will send a message to the output machine informing it which AA machine has finished its task.
